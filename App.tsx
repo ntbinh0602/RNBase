@@ -15,16 +15,16 @@ import {
 } from 'react-native';
 
 import SplashScreen from './src/screens/Splash';
-import CustomSwitch from './src/libraries/CustomSwitch';
-import CustomCheckbox from './src/libraries/CustomCheckbox';
+import CustomSwitch from './src/common/CustomSwitch';
+import CustomCheckbox from './src/common/CustomCheckbox';
 import {
   useForm,
   FormProvider,
   SubmitHandler,
   SubmitErrorHandler,
 } from 'react-hook-form';
-import {CustomTextInput} from './src/libraries/CustomTextInput';
-import Icon from './src/libraries/Icons';
+import {CustomTextInput} from './src/common/CustomTextInput';
+import Icon from './src/common/Icons';
 
 interface FormValues {
   email: string;

@@ -29,7 +29,10 @@ const ControlledInput: React.FC<CustomTextInputProps> = props => {
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <View
-        style={[styles.inputContainer, {borderColor: error ? 'red' : '#333'}]}>
+        style={[
+          styles.inputContainer,
+          {borderColor: error ? 'red' : '#888888'},
+        ]}>
         <RNTextInput
           style={styles.input}
           onChangeText={field.onChange}
@@ -76,7 +79,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderRadius: 4,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    borderColor: '#333',
   },
   input: {
     backgroundColor: 'white',
