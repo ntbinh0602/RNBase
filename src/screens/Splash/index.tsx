@@ -19,7 +19,7 @@ const SplashScreen: React.FC<Props> = ({onEnd}) => {
 
   return (
     <View style={styles.viewStyles}>
-      <Text style={styles.textStyles}>Wellcome</Text>
+      <Text style={styles.textStyles}>Welcome</Text>
     </View>
   );
 };

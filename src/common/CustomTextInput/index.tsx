@@ -1,29 +1,53 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   Text,
   StyleSheet,
+  Pressable,
 } from 'react-native';
 import {
   useController,
   useFormContext,
   UseControllerProps,
 } from 'react-hook-form';
+import Icon from '../Icons';
+type InputType = 'text' | 'password' | 'number' | 'textarea';
 
 interface CustomTextInputProps extends RNTextInputProps, UseControllerProps {
   label: string;
   defaultValue?: string;
+  inputType?: InputType;
 }
 
 const ControlledInput: React.FC<CustomTextInputProps> = props => {
-  const {label, name, rules, defaultValue, ...inputProps} = props;
+  const {
+    label,
+    name,
+    rules,
+    defaultValue,
+    inputType = 'text',
+    ...inputProps
+  } = props;
 
   const {
     field,
     fieldState: {error},
   } = useController({name, rules, defaultValue});
+  const [security, setSecurity] = useState(true);
+  const getKeyboardType = () => {
+    switch (inputType) {
+      case 'number':
+        return 'numeric';
+      case 'password':
+        return 'default';
+      case 'textarea':
+        return 'default';
+      default:
+        return 'default';
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -32,14 +56,29 @@ const ControlledInput: React.FC<CustomTextInputProps> = props => {
         style={[
           styles.inputContainer,
           {borderColor: error ? 'red' : '#888888'},
+          inputType === 'textarea' && {height: 100},
+          inputType === 'password' && styles.password,
         ]}>
         <RNTextInput
-          style={styles.input}
+          style={[styles.input, inputType === 'textarea' && styles.textarea]}
           onChangeText={field.onChange}
           onBlur={field.onBlur}
           value={field.value}
+          secureTextEntry={inputType === 'password' && security}
+          keyboardType={getKeyboardType()}
+          multiline={inputType === 'textarea'}
           {...inputProps}
         />
+        {inputType === 'password' && (
+          <Pressable onPress={() => setSecurity(!security)}>
+            <Icon
+              type="Ionicons"
+              name={security ? 'eye-off' : 'eye'}
+              color="#333"
+              style={styles.icon}
+            />
+          </Pressable>
+        )}
       </View>
       <View style={styles.errContainer}>
         {error && <Text style={styles.errorText}>{error.message}</Text>}
@@ -72,10 +111,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderColor: 'white',
-    borderWidth: 1,
     borderRadius: 8,
-    // backgroundColor: 'red',
   },
   inputContainer: {
     borderRadius: 4,
@@ -87,6 +123,14 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 10,
     borderRadius: 4,
+    flexGrow: 1,
+  },
+  textarea: {
+    textAlignVertical: 'top',
+  },
+  password: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   errContainer: {
     height: 20,
@@ -95,5 +139,8 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginTop: 4,
+  },
+  icon: {
+    paddingHorizontal: 5,
   },
 });

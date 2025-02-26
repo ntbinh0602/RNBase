@@ -25,6 +25,8 @@ import {
 } from 'react-hook-form';
 import {CustomTextInput} from './src/common/CustomTextInput';
 import Icon from './src/common/Icons';
+import DismissKeyboard from './src/components/DismissKeyboard';
+import {CustomButton} from './src/common/CustomButton';
 
 interface FormValues {
   email: string;
@@ -49,52 +51,60 @@ function App(): JSX.Element {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'gray'}}>
       <StatusBar barStyle={'dark-content'} />
-      <View style={{flex: 1}}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text>App.js</Text>
-          <Icon type="AntDesign" name="star" />
-          <CustomSwitch size="small" />
-          <CustomCheckbox
-            onPress={(isChecked: boolean) => {}}
-            text="Custom Checkbox"
-            // innerIconStyle={{borderWidth: 2}}
-            fillColor="blue"
-            textStyle={{
-              textDecorationLine: 'none',
-            }}
+      <DismissKeyboard>
+        <View style={{flex: 1}}>
+          <View
             style={{
-              paddingHorizontal: 35,
-            }}
-          />
-        </View>
-        <View style={{flex: 1, backgroundColor: '#fff'}}>
-          <FormProvider {...methods}>
-            <CustomTextInput
-              name="email"
-              label="Tài khoản"
-              placeholder="jon.doe@email.com"
-              keyboardType="email-address"
-              rules={{required: 'Tài khoản là bắt buộc!'}}
+              flex: 1,
+              backgroundColor: '#fff',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>App.js</Text>
+            <Icon type="AntDesign" name="star" />
+            <CustomSwitch size="small" />
+            <CustomCheckbox
+              onPress={(isChecked: boolean) => {}}
+              text="Custom Checkbox"
+              // innerIconStyle={{borderWidth: 2}}
+              fillColor="blue"
+              textStyle={{
+                textDecorationLine: 'none',
+              }}
+              style={{
+                paddingHorizontal: 35,
+              }}
             />
-            <CustomTextInput
-              name="password"
-              label="Mật khẩu"
-              secureTextEntry
-              placeholder="Nhập mật khẩu"
-              rules={{required: 'Mật khẩu là bắt buộc!'}}
-            />
-          </FormProvider>
-          <TouchableOpacity onPress={methods.handleSubmit(onSubmit, onError)}>
-            <Text>Submit</Text>
-          </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, backgroundColor: '#fff'}}>
+            <FormProvider {...methods}>
+              <CustomTextInput
+                name="email"
+                label="Tài khoản"
+                placeholder="jon.doe@email.com"
+                keyboardType="email-address"
+                rules={{required: 'Tài khoản là bắt buộc!'}}
+              />
+              <CustomTextInput
+                name="password"
+                label="Mật khẩu"
+                inputType="password"
+                placeholder="Nhập mật khẩu"
+                rules={{required: 'Mật khẩu là bắt buộc!'}}
+              />
+            </FormProvider>
+
+            <CustomButton
+              type="primary"
+              onPress={methods.handleSubmit(onSubmit, onError)}
+              buttonStyle={{
+                marginHorizontal: 8,
+              }}>
+              Đăng nhập
+            </CustomButton>
+          </View>
         </View>
-      </View>
+      </DismissKeyboard>
     </SafeAreaView>
   );
 }
