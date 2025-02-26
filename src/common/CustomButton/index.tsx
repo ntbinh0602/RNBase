@@ -49,6 +49,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
     <TouchableOpacity
       style={combinedButtonStyle}
       onPress={onPress}
+      activeOpacity={0.8}
       disabled={disabled || loading}>
       {loading ? (
         <ActivityIndicator
