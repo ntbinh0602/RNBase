@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {fontSize} from '../../../styles/commonStyles';
-import Icon from '../../../common/Icons';
+import Icon from '../../../common/icons';
 
 const HeaderRequest = () => {
   return (

@@ -1,32 +1,47 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, ImageBackground, StyleSheet} from 'react-native';
 import React from 'react';
 import {LoginBackground} from '../../assets';
-import {
-  useForm,
-  FormProvider,
-  SubmitHandler,
-  SubmitErrorHandler,
-} from 'react-hook-form';
-import {CustomTextInput} from '../../common/CustomTextInput';
-import {CustomButton} from '../../common/CustomButton';
-import CustomCheckbox from '../../common/CustomCheckbox';
+import {useForm, FormProvider, SubmitHandler} from 'react-hook-form';
+import {CustomTextInput} from '../../components/CustomTextInput';
+import {CustomButton} from '../../components/CustomButton';
 import Colors from '../../utils/colors';
+import useAuthStore from '../../store/authStore';
+import {LoginPayLoad} from '../../types/auth.type';
+import {UserStore} from '../../types/user.type';
+import {roleTypes} from '../../common/constant';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../types/rootParam.type';
+import {AuthStackScreens, NavigationStackScreens} from '../../common/enum';
 
-interface FormValues {
-  email: string;
-  password: string;
-}
-const Login = () => {
-  const methods = useForm<FormValues>();
+type Props = NativeStackScreenProps<RootStackParamList, AuthStackScreens.Login>;
 
-  const onSubmit: SubmitHandler<FormValues> = data =>
-    console.log('Form Data:', data);
+const Login: React.FC<Props> = ({navigation}) => {
+  const {isLoading, login, chooseStore} = useAuthStore();
+  const methods = useForm<LoginPayLoad>();
+
+  const getUserStores = (userStores: Array<UserStore>) => {
+    return userStores.map(currentUserStore => ({
+      value: currentUserStore.storeId,
+      label: `${
+        roleTypes.find(roleType => roleType.value === currentUserStore.role)
+          ?.label || ''
+      } ${currentUserStore.store.name}`,
+    }));
+  };
+
+  const onSubmit: SubmitHandler<LoginPayLoad> = async data => {
+    try {
+      const response = await login(data);
+      const userStoreOptions = getUserStores(response?.userStores || []) || [];
+      await chooseStore({
+        token: response?.verifyToken || '',
+        storeId: userStoreOptions[0].value || '',
+      });
+      navigation.replace(NavigationStackScreens.MainNavigation);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ImageBackground style={styles.container} source={LoginBackground}>
@@ -34,7 +49,7 @@ const Login = () => {
         <Text style={styles.textHeader}>Đăng nhập</Text>
         <FormProvider {...methods}>
           <CustomTextInput
-            name="account"
+            name="username"
             label="Tài khoản"
             placeholder="name@email.com"
             keyboardType="email-address"
@@ -43,7 +58,7 @@ const Login = () => {
             inputStyle={styles.inputStyle}
           />
           <CustomTextInput
-            name="Password"
+            name="password"
             label="Mật khẩu"
             inputType="password"
             placeholder="Password"
@@ -63,6 +78,7 @@ const Login = () => {
             onPress={(isChecked: boolean) => {}}
           /> */}
           <CustomButton
+            loading={isLoading}
             buttonStyle={styles.loginButton}
             type="primary"
             onPress={methods.handleSubmit(onSubmit)}>

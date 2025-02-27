@@ -1,5 +1,5 @@
-import { message, notification } from 'antd';
 import axios from 'axios';
+import { showMessage } from 'react-native-flash-message';
 
 interface ShowErrorArgument {
   error: unknown;
@@ -20,10 +20,12 @@ export const showError = ({
     message = error?.response?.data?.message || error?.response?.data || error?.message || message;
   }
   if (!hideNotification)
-    notification.error({
-      message: title,
-      description: message
-    });
+    showMessage({
+          message: title,
+          description: message,
+          type: 'warning',
+        })
+   
 };
 export const showErrorMessage = ({
   error,
@@ -35,6 +37,10 @@ export const showErrorMessage = ({
     errorMessage = error?.response?.data?.message || error?.message || defaultMessage;
   }
   if (!hideNotification) {
-    message.error(errorMessage);
+       showMessage({
+          message: 'Thông báo',
+          description: errorMessage,
+          type: 'warning',
+        })
   }
 };

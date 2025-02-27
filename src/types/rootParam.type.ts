@@ -1,4 +1,4 @@
-import { AuthStackScreens, MainStackScreens, NavigationStackScreens } from "../utils/enum";
+import { AuthStackScreens, MainStackScreens, NavigationStackScreens } from "../common/enum";
 
 export type RootStackParamList = {
   [NavigationStackScreens.SplashScreen]: undefined;

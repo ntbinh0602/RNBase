@@ -1,6 +1,6 @@
-import { TableStatus } from 'src/shared/common/enum';
 import { Store } from './store.type';
 import { Session } from './session.type';
+import { TableStatus } from '../common/enum';
 
 export interface Zone {
   id: string;

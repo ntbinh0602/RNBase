@@ -1,14 +1,12 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {CustomButton} from '../../../common/CustomButton';
+import {CustomButton} from '../../../components/CustomButton';
 import {fontSize} from '../../../styles/commonStyles';
-import Icon from '../../../common/Icons';
+import Icon from '../../../common/icons';
+import {Notifications} from '../../../types/notification';
 
 interface CardRequestProps {
-  item: {
-    id: number;
-    name: string;
-  };
+  item: Notifications;
 }
 
 const CardRequest: React.FC<CardRequestProps> = ({item}) => {
@@ -26,7 +24,7 @@ const CardRequest: React.FC<CardRequestProps> = ({item}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.text}>5/10</Text>
             <View style={styles.orderDetails}>
-              <Text style={styles.text}>Bánh mỳ nướng muối ớt</Text>
+              <Text style={styles.text}>{item?.name}</Text>
               <Text style={styles.noteText}>
                 Ghi chú: Bánh mỳ nướng không muối, không ớt, không hành.
               </Text>
