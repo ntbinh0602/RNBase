@@ -12,7 +12,7 @@ type Props = NativeStackScreenProps<
 const SplashScreen: React.FC<Props> = ({navigation}) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigation.replace(NavigationStackScreens.AuthNavigation);
+      navigation.replace(NavigationStackScreens.MainNavigation);
     }, 3000);
 
     return () => clearTimeout(timeout);

@@ -59,3 +59,6 @@ export enum NavigationStackScreens{
 export enum AuthStackScreens{
   Login = "Login"
 }
+export enum MainStackScreens{
+  RequestTransferred = "RequestTransferred"
+}

@@ -8,7 +8,7 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../utils/colors';
+import Colors from '../../utils/colors';
 
 interface CustomButtonProps {
   type?: 'primary' | 'default' | 'danger';
@@ -66,7 +66,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 10,
+    paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 8,
     borderWidth: 1,
