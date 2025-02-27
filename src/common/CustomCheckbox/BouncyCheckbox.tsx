@@ -14,6 +14,7 @@ import {
   BouncyCheckboxHandle,
   BouncyCheckboxProps,
 } from './BouncyCheckbox.type';
+import Colors from '../../utils/colors';
 
 const BouncyCheckbox: React.ForwardRefRenderFunction<
   BouncyCheckboxHandle,
@@ -33,7 +34,7 @@ const BouncyCheckbox: React.ForwardRefRenderFunction<
     size = 20,
     onPress,
     onLongPress,
-    fillColor = '#ffc484',
+    fillColor = Colors.primary || '#ffc484',
     ImageComponent = Image,
     unFillColor = 'transparent',
     disableText = false,

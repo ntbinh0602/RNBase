@@ -19,6 +19,8 @@ interface CustomTextInputProps extends RNTextInputProps, UseControllerProps {
   label: string;
   defaultValue?: string;
   inputType?: InputType;
+  inputContainerStyle?: object; // Custom style for input container
+  inputStyle?: object; // Custom style for input
 }
 
 const ControlledInput: React.FC<CustomTextInputProps> = props => {
@@ -28,6 +30,8 @@ const ControlledInput: React.FC<CustomTextInputProps> = props => {
     rules,
     defaultValue,
     inputType = 'text',
+    inputContainerStyle,
+    inputStyle,
     ...inputProps
   } = props;
 
@@ -55,12 +59,17 @@ const ControlledInput: React.FC<CustomTextInputProps> = props => {
       <View
         style={[
           styles.inputContainer,
-          {borderColor: error ? 'red' : '#888888'},
+          {borderColor: error ? 'red' : '#D9D9D9'},
           inputType === 'textarea' && {height: 100},
           inputType === 'password' && styles.password,
+          inputContainerStyle, // Apply custom style
         ]}>
         <RNTextInput
-          style={[styles.input, inputType === 'textarea' && styles.textarea]}
+          style={[
+            styles.input,
+            inputStyle,
+            inputType === 'textarea' && styles.textarea,
+          ]}
           onChangeText={field.onChange}
           onBlur={field.onBlur}
           value={field.value}
@@ -73,8 +82,8 @@ const ControlledInput: React.FC<CustomTextInputProps> = props => {
           <Pressable onPress={() => setSecurity(!security)}>
             <Icon
               type="Ionicons"
-              name={security ? 'eye-off' : 'eye'}
-              color="#333"
+              name={security ? 'eye-outline' : 'eye-off-outline'}
+              color="#D9D9D9"
               style={styles.icon}
             />
           </Pressable>
@@ -116,13 +125,13 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: '#333',
+    borderColor: '#D9D9D9',
   },
   input: {
-    backgroundColor: 'white',
     height: 40,
     paddingHorizontal: 10,
     borderRadius: 4,
+    flexShrink: 1,
     flexGrow: 1,
   },
   textarea: {
@@ -141,6 +150,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   icon: {
-    paddingHorizontal: 5,
+    paddingRight: 16,
   },
 });

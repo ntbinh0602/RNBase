@@ -8,7 +8,7 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../utils/colors';
+import Colors from '../../utils/colors';
 
 interface CustomButtonProps {
   type?: 'primary' | 'default' | 'danger';

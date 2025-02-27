@@ -1,5 +1,5 @@
 // src/theme/colors.ts
-const colors = {
+const Colors = {
   main: '#FFFFFF',
   primary: '#005FAB',
   secondary: '#EFF6FF',
@@ -30,7 +30,7 @@ const colors = {
   sunsetEmber: '#FA7953',
   blushMist: '#FEF2F2',
   firestormRed: '#DC2626',
-  skyFrost: '#E3F2FD'
+  skyFrost: '#E3F2FD',
 };
 
-export default colors;
+export default Colors;

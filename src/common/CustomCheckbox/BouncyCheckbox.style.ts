@@ -35,9 +35,8 @@ export default StyleSheet.create<any>({
     alignItems: 'center',
     justifyContent: 'center',
   }),
-  textStyle: (checked: boolean) => ({
+  textStyle: () => ({
     fontSize: 14,
     color: '#757575',
-    textDecorationLine: checked ? 'line-through' : 'none',
   }),
 });
