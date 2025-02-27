@@ -30,7 +30,7 @@ const Colors = {
   sunsetEmber: '#FA7953',
   blushMist: '#FEF2F2',
   firestormRed: '#DC2626',
-  skyFrost: '#E3F2FD'
+  skyFrost: '#E3F2FD',
 };
 
 export default Colors;
