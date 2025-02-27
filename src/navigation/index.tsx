@@ -5,6 +5,7 @@ import SplashScreen from '../screens/Splash';
 import {NavigationStackScreens} from '../utils/enum';
 import AuthNavigationRoutes from './stacks/auth';
 import {RootStackParamList} from '../types/rootParam.type';
+import MainNavigationRoutes from './stacks/main';
 
 const MainNavigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,6 +26,11 @@ const MainNavigator = () => {
         <Stack.Screen
           name={NavigationStackScreens.AuthNavigation}
           component={AuthNavigationRoutes}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name={NavigationStackScreens.MainNavigation}
+          component={MainNavigationRoutes}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
