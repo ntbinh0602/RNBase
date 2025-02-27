@@ -17,12 +17,12 @@ module.exports = {
 };
 
 // metro.config.js
-const {
-  wrapWithReanimatedMetroConfig,
-} = require('react-native-reanimated/metro-config');
+// const {
+//   wrapWithReanimatedMetroConfig,
+// } = require('react-native-reanimated/metro-config');
 
-const config = {
-  // Your existing Metro configuration options
-};
+// const config = {
+//   // Your existing Metro configuration options
+// };
 
-module.exports = wrapWithReanimatedMetroConfig(config);
+// module.exports = wrapWithReanimatedMetroConfig(config);
