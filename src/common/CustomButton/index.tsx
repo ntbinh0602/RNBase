@@ -17,6 +17,8 @@ interface CustomButtonProps {
   onPress?: (event: GestureResponderEvent) => void;
   children: React.ReactNode;
   buttonStyle?: ViewStyle; // Custom button style
+  color?: string; // Custom text color
+  backgroundColor?: string; // Custom background color
   textStyle?: TextStyle; // Custom text style
 }
 
@@ -28,20 +30,28 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   children,
   buttonStyle,
   textStyle,
+  color,
+  backgroundColor,
 }) => {
   const combinedButtonStyle: ViewStyle[] = [
     styles.button,
-    type === 'primary' && styles.primaryButton,
-    type === 'danger' && styles.dangerButton,
+    type === 'primary' && {
+      backgroundColor: backgroundColor || Colors.primary,
+      borderColor: backgroundColor || Colors.primary,
+    },
+    type === 'danger' && {
+      backgroundColor: backgroundColor || 'red',
+      borderColor: backgroundColor || 'red',
+    },
     disabled && styles.disabledButton,
     buttonStyle, // Allow custom styles
   ].filter(Boolean) as ViewStyle[];
 
   const combinedTextStyle: TextStyle[] = [
     styles.text,
-    type === 'primary' && styles.primaryText,
-    type === 'danger' && styles.dangerText,
+    (type === 'primary' || type === 'danger') && {color: '#fff'},
     disabled && styles.disabledText,
+    color && {color}, // Apply custom color
     textStyle, // Allow custom text styles
   ].filter(Boolean) as TextStyle[];
 
@@ -54,7 +64,9 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
       {loading ? (
         <ActivityIndicator
           color={
-            type === 'primary' || type === 'danger' ? '#fff' : Colors.primary
+            type === 'primary' || type === 'danger'
+              ? '#fff'
+              : color || Colors.primary
           }
         />
       ) : (
@@ -74,14 +86,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primaryButton: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  dangerButton: {
-    backgroundColor: 'red',
-    borderColor: 'red',
-  },
   disabledButton: {
     backgroundColor: '#f5f5f5',
     borderColor: '#d9d9d9',
@@ -90,12 +94,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
     fontWeight: '500',
-  },
-  primaryText: {
-    color: '#fff',
-  },
-  dangerText: {
-    color: '#fff',
   },
   disabledText: {
     color: '#bfbfbf',
