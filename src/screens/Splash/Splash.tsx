@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {NavigationStackScreens} from '../../utils/enum';
+import {NavigationStackScreens} from '../../common/enum';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../types/rootParam.type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -11,11 +12,18 @@ type Props = NativeStackScreenProps<
 
 const SplashScreen: React.FC<Props> = ({navigation}) => {
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      navigation.replace(NavigationStackScreens.MainNavigation);
-    }, 3000);
+    const checkAccessToken = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      setTimeout(() => {
+        if (accessToken) {
+          navigation.replace(NavigationStackScreens.MainNavigation);
+        } else {
+          navigation.replace(NavigationStackScreens.AuthNavigation);
+        }
+      }, 2000);
+    };
 
-    return () => clearTimeout(timeout);
+    checkAccessToken();
   }, [navigation]);
 
   return (

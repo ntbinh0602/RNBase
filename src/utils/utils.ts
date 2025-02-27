@@ -1,7 +1,8 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import dayjs from 'dayjs';
-import { RequestCounts } from 'src/types/request.type';
-import { ErrorResponse } from 'src/types/utils.type';
+import { ErrorResponse } from '../types/utils.type';
+import { RequestCounts } from '../types/request.type';
+
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   return axios.isAxiosError(error);

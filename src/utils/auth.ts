@@ -37,8 +37,6 @@ export const getCustomerInfo = async () => {
 
 export const clearLS = async () => {
   await AsyncStorage.removeItem('accessToken');
-  await AsyncStorage.removeItem('verifyToken');
-  await AsyncStorage.removeItem('customerInfo');
 };
 
 export const getAccessTokenFromLS = async () => {

@@ -1,4 +1,4 @@
-import { RequestStatus } from 'src/shared/common/enum';
+import { RequestStatus } from '../common/enum';
 import { Session } from './session.type';
 import { Table, Zone } from './table.type';
 import { User } from './user.type';

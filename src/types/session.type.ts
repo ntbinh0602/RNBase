@@ -1,6 +1,6 @@
-import { SessionStatus } from 'src/shared/common/enum';
 import { Table } from './table.type';
 import { SessionCustomer } from './request.type';
+import { SessionStatus } from '../common/enum';
 
 export interface Session {
   id: string;

@@ -12,7 +12,7 @@ import {
   useFormContext,
   UseControllerProps,
 } from 'react-hook-form';
-import Icon from '../Icons';
+import Icon from '../../common/icons';
 type InputType = 'text' | 'password' | 'number' | 'textarea';
 
 interface CustomTextInputProps extends RNTextInputProps, UseControllerProps {

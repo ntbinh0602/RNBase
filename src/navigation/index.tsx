@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from '../screens/Splash';
-import {NavigationStackScreens} from '../utils/enum';
+import {NavigationStackScreens} from '../common/enum';
 import AuthNavigationRoutes from './stacks/auth';
 import {RootStackParamList} from '../types/rootParam.type';
 import MainNavigationRoutes from './stacks/main';
