@@ -44,12 +44,14 @@ const CardRequest: React.FC<CardRequestProps> = ({item}) => {
         <CustomButton
           buttonStyle={styles.rejectButton}
           type="danger"
+          textStyle={{fontSize: fontSize.font12}}
           onPress={() => console.log('123123')}>
-          <Text>Từ chối</Text>
+          Từ chối
         </CustomButton>
         <CustomButton
           buttonStyle={styles.acceptButton}
           type="primary"
+          textStyle={{fontSize: fontSize.font12}}
           onPress={() => console.log('123123')}>
           <Text>Hoàn tất đơn</Text>
         </CustomButton>

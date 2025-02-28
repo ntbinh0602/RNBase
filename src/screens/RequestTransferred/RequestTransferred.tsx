@@ -1,17 +1,8 @@
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, FlatList, RefreshControl, Text} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {fontSize, wp} from '../../styles/commonStyles';
+import {wp} from '../../styles/commonStyles';
 import CardRequest from './components/CardRequest';
 import HeaderRequest from './components/HeaderRequest';
-import Icon from '../../common/icons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../types/rootParam.type';
 import {NavigationStackScreens} from '../../common/enum';
@@ -21,6 +12,8 @@ import {AxiosResponse} from 'axios';
 import http from '../../utils/http';
 import {Notifications} from '../../types/notification';
 import {getSocket} from '../../utils/socket';
+import useAuthStore from '../../store/authStore';
+import LoadingLayer from '../../components/Loading/LoadingLayer';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -28,13 +21,13 @@ type Props = NativeStackScreenProps<
 >;
 
 const RequestTransferred: React.FC<Props> = ({navigation}) => {
-  const [notificationVisible, setNotificationVisible] =
-    useState<boolean>(false);
+  const {currentUser, getCurrentUser, chooseStore} = useAuthStore();
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notifications[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
+
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const onRefresh = useCallback(() => {}, []);
@@ -63,16 +56,17 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
   };
 
   useEffect(() => {
+    fetchNotifications(page, limit);
+
     const initialize = async () => {
-      const socket = await getSocket(); // Đảm bảo đã có socket trước khi sử dụng
+      const socket = await getSocket(); // Đợi lấy socket
 
-      fetchNotifications(page, limit);
-
-      socket.on('request.notification', (data: Notifications) => {
+      socket.on('notification.request', (data: Notifications) => {
         setNotifications(prevNotifications => {
           const existingIds = new Set(prevNotifications.map(n => n.id));
           if (!existingIds.has(data.id)) {
             setUnreadCount(prevUnreadCount => prevUnreadCount + 1);
+
             return [{...data, isRead: false}, ...prevNotifications];
           }
           return prevNotifications;
@@ -80,16 +74,33 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
       });
 
       return () => {
-        socket.off('request.notification');
+        socket.off('notification.request');
       };
     };
 
     initialize();
+
+    return () => {
+      getSocket().then(socket => socket.off('notification.request'));
+    };
   }, [page, limit]);
 
+  const addDocuments = () => {
+    setPage((prevPage: number) => {
+      const nextPage = prevPage + 1;
+      fetchNotifications(nextPage, limit);
+      return nextPage;
+    });
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.contentWrapper}>
+    <View style={[styles.container]}>
+      <LoadingLayer />
+      {/* <View style={styles.contentWrapper}>
         <HeaderRequest />
         <View style={{flex: 1, marginTop: 20}}>
           <FlatList
@@ -101,8 +112,20 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             scrollEventThrottle={250}
+            onEndReached={info => {
+              addDocuments();
+            }}
             onEndReachedThreshold={0.01}
-            ListFooterComponent={<View style={{padding: 15}} />}
+            ListFooterComponent={
+              <View
+                style={{
+                  padding: 15,
+                }}>
+                {hasMore && (
+                  <Text style={{fontWeight: '600'}}>Đang tải thêm...</Text>
+                )}
+              </View>
+            }
             columnWrapperStyle={styles.row}
           />
         </View>
@@ -114,7 +137,7 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
             clearLS();
           }}
         />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -133,7 +156,6 @@ const styles = StyleSheet.create({
     width: wp(20),
     backgroundColor: 'white',
   },
-
   row: {
     marginRight: -5,
     marginLeft: -5,

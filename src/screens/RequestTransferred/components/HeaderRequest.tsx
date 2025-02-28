@@ -1,31 +1,128 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {fontSize} from '../../../styles/commonStyles';
 import Icon from '../../../common/icons';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomModal from '../../../components/CustomModal';
+import SelectDropdown from 'react-native-select-dropdown';
+import {UserStore} from '../../../types/user.type';
+import {roleTypes} from '../../../common/constant';
+import useAuthStore from '../../../store/authStore';
+import {Option} from '../../../types/utils.type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../../types/rootParam.type';
+import {NavigationStackScreens} from '../../../common/enum';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const HeaderRequest = () => {
+interface HeaderRequestProps {}
+
+// Khai báo kiểu navigation
+type NavigationProps = NativeStackNavigationProp<
+  RootStackParamList,
+  NavigationStackScreens.MainNavigation
+>;
+
+const HeaderRequest: React.FC<HeaderRequestProps> = () => {
+  const navigation = useNavigation<NavigationProps>();
+
+  const {currentUser, getCurrentUser, chooseStore, isLoading} = useAuthStore();
+  const [openStore, setOpenStore] = useState<boolean>(false);
+  const [selectedStore, setSelectedStore] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
+
+  const getUserStores = (userStores: Array<UserStore>) => {
+    return userStores.map(currentUserStore => ({
+      value: currentUserStore.storeId,
+      label: `${
+        roleTypes.find(roleType => roleType.value === currentUserStore.role)
+          ?.label || ''
+      } ${currentUserStore.store.name}`,
+    }));
+  };
+
+  const handleChangeStore = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const res = await chooseStore({
+        token: accessToken || '',
+        storeId: selectedStore || '',
+      });
+      await AsyncStorage.setItem('accessToken', res?.accessToken as string);
+      getCurrentUser();
+      setOpenStore(false);
+      setTimeout(() => {
+        navigation.replace(NavigationStackScreens.MainNavigation);
+      }, 1000);
+    } catch (error) {
+      console.log('🇻🇳 👉 error', error);
+    }
+  };
+
   return (
-    <View style={styles.rowContainer}>
-      <View style={styles.requestBox}>
-        <Text style={styles.requestText}>Yêu cầu gọi món</Text>
+    <>
+      <View style={[styles.rowContainer, {paddingTop: insets.top ? 10 : 5}]}>
+        <View style={styles.requestBox}>
+          <Text style={styles.requestText}>Yêu cầu gọi món</Text>
+          <TouchableOpacity
+            style={{backgroundColor: 'white'}}
+            onPress={() => console.log('123123')}>
+            <View style={styles.sortWrapper}>
+              <Icon
+                type="Foundation"
+                name={'filter'}
+                color="#005FAB"
+                size={26}
+              />
+              <Text style={styles.sortText}>Sắp xếp</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
-          style={{backgroundColor: 'white'}}
-          onPress={() => console.log('123123')}>
-          <View style={styles.sortWrapper}>
-            <Icon type="Foundation" name={'filter'} color="#005FAB" size={26} />
-            <Text style={styles.sortText}>Sắp xếp</Text>
-          </View>
+          onPress={() => setOpenStore(true)}
+          style={styles.storeBox}>
+          <Icon type="FontAwesome5" name={'store'} color="#EA580C" />
+          <Text numberOfLines={1} style={styles.storeText}>
+            {currentUser?.currentUserStore?.store?.name}
+          </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() => console.log('123')}
-        style={styles.storeBox}>
-        <Icon type="FontAwesome5" name={'store'} color="#EA580C" />
-        <Text numberOfLines={1} style={styles.storeText}>
-          Cửa hàng MobiFone - 586 Nguyễn...
-        </Text>
-      </TouchableOpacity>
-    </View>
+      <CustomModal
+        visible={openStore}
+        width={'46%'}
+        title="Chọn cửa hàng"
+        onClose={() => setOpenStore(false)}
+        onConfirm={handleChangeStore}
+        buttonAxis="vertical">
+        <SelectDropdown
+          data={getUserStores(currentUser?.userStores || [])} // Kiểm tra giá trị này
+          onSelect={(selectedItem: Option, index: number) => {
+            setSelectedStore(selectedItem.value);
+          }}
+          defaultValue={getUserStores(currentUser?.userStores || []).find(
+            store => store.value === currentUser?.currentUserStore?.storeId,
+          )}
+          renderButton={(selectedItem: Option | null, isOpened: boolean) => (
+            <View style={styles.dropdownButtonStyle}>
+              <Text style={styles.dropdownButtonTxtStyle}>
+                {(selectedItem && selectedItem.label) || 'Chọn cửa hàng'}
+              </Text>
+            </View>
+          )}
+          renderItem={(item: Option, index: number, isSelected: boolean) => (
+            <View
+              style={{
+                ...styles.dropdownItemStyle,
+                ...(isSelected && {backgroundColor: '#D2D9DF'}),
+              }}>
+              <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
+            </View>
+          )}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
+        />
+      </CustomModal>
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -59,6 +156,7 @@ const styles = StyleSheet.create({
   },
   sortWrapper: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   sortText: {
     color: '#005FAB',
@@ -81,6 +179,46 @@ const styles = StyleSheet.create({
     color: '#EA580C',
     fontWeight: '600',
     marginLeft: 10,
+    flex: 1,
+  },
+  dropdownButtonStyle: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#E9ECEF',
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#151E26',
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#151E26',
   },
 });
 

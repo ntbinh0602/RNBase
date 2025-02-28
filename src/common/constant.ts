@@ -1,3 +1,4 @@
+import DeviceInfo from 'react-native-device-info';
 import { OrderStatus, RoleType, TableStatus } from './enum';
 
 export const roleTypes = [

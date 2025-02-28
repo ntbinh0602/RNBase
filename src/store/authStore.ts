@@ -4,6 +4,7 @@ import { ChooseStorePayLoad, ChooseStoreResponse, LoginPayLoad, LoginResponse } 
 import http from '../utils/http';
 import { clearLS, URL_CHOOSE_STORE, URL_CURRENT_USER, URL_LOGIN } from '../utils/auth';
 import { showError } from '../utils/error';
+import { showMessage } from 'react-native-flash-message';
 
 interface AuthStore {
   currentUser: User | null;
@@ -22,6 +23,7 @@ const useAuthStore = create<AuthStore>((set) => ({
     set({ isLoading: true });
     try {
       const response = await http.post<LoginResponse>(URL_LOGIN, data);
+
       set({ isLoading: false });
       return response.data;
     } catch (error) {
@@ -49,6 +51,7 @@ const useAuthStore = create<AuthStore>((set) => ({
     try {
       const response = await http.get(URL_CURRENT_USER);
       set({ currentUser: response.data, isLoading: false });
+      console.log('🇻🇳 👉 responseresponseresponse',response)
       return response.data;
     } catch (error) {
       showError({ error, title: 'Lỗi xác thực', message: 'Không có quyền truy cập!' });

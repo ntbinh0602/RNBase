@@ -12,6 +12,8 @@ import {roleTypes} from '../../common/constant';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../types/rootParam.type';
 import {AuthStackScreens, NavigationStackScreens} from '../../common/enum';
+import {showError} from '../../utils/error';
+import {showMessage} from 'react-native-flash-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, AuthStackScreens.Login>;
 
@@ -35,7 +37,12 @@ const Login: React.FC<Props> = ({navigation}) => {
       const userStoreOptions = getUserStores(response?.userStores || []) || [];
       await chooseStore({
         token: response?.verifyToken || '',
-        storeId: userStoreOptions[0].value || '',
+        storeId: userStoreOptions[1].value || '',
+      });
+      showMessage({
+        message: 'Đăng nhập thành công',
+        description: 'Chào mừng bạn đến với order tại bàn!',
+        type: 'success',
       });
       navigation.replace(NavigationStackScreens.MainNavigation);
     } catch (error) {

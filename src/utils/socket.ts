@@ -17,7 +17,7 @@ export const initializeSocket = async (): Promise<Socket> => {
 
     socket = io('https://ctynamviet.1erp.vn', {
       extraHeaders: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${accessToken}`,
       },
       reconnection: true, // Cho phép tự động reconnect
       reconnectionAttempts: 5, // Thử lại tối đa 5 lần
@@ -47,7 +47,7 @@ export const getSocket = async (): Promise<Socket> => {
   if (socket) {
     return socket;
   }
-
+  console.log('🇻🇳 👉 socket',socket)
   console.warn('⚠️ Socket not initialized. Waiting for initialization...');
   return await initializeSocket();
 };

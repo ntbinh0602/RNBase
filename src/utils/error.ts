@@ -15,7 +15,6 @@ export const showError = ({
   message = 'Lỗi không xác định',
   hideNotification = false
 }: ShowErrorArgument) => {
-  console.error(error);
   if (axios.isAxiosError(error)) {
     message = error?.response?.data?.message || error?.response?.data || error?.message || message;
   }
