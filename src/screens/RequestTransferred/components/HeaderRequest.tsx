@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {fontSize} from '../../../styles/commonStyles';
-import Icon from '../../../common/icons';
+import Icon, {Icons} from '../../../common/icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomModal from '../../../components/CustomModal';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -14,6 +14,8 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../../types/rootParam.type';
 import {NavigationStackScreens} from '../../../common/enum';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import tw from 'twrnc';
+import {InteractionManager} from 'react-native';
 
 interface HeaderRequestProps {}
 
@@ -25,12 +27,11 @@ type NavigationProps = NativeStackNavigationProp<
 
 const HeaderRequest: React.FC<HeaderRequestProps> = () => {
   const navigation = useNavigation<NavigationProps>();
-
+  const [valueRedo, setValueRedo] = useState<number>(1);
   const {currentUser, getCurrentUser, chooseStore, isLoading} = useAuthStore();
   const [openStore, setOpenStore] = useState<boolean>(false);
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
   const insets = useSafeAreaInsets();
-
   const getUserStores = (userStores: Array<UserStore>) => {
     return userStores.map(currentUserStore => ({
       value: currentUserStore.storeId,
@@ -40,7 +41,11 @@ const HeaderRequest: React.FC<HeaderRequestProps> = () => {
       } ${currentUserStore.store.name}`,
     }));
   };
-
+  useEffect(() => {
+    if (currentUser) {
+      setSelectedStore(currentUser?.currentUserStore?.storeId);
+    }
+  }, [currentUser]);
   const handleChangeStore = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -51,12 +56,14 @@ const HeaderRequest: React.FC<HeaderRequestProps> = () => {
       await AsyncStorage.setItem('accessToken', res?.accessToken as string);
       getCurrentUser();
       setOpenStore(false);
-      setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
         navigation.replace(NavigationStackScreens.MainNavigation);
-      }, 1000);
-    } catch (error) {
-      console.log('🇻🇳 👉 error', error);
-    }
+      });
+    } catch (error) {}
+  };
+
+  const handleChangeRedo = (value: number) => {
+    setValueRedo(value);
   };
 
   return (
@@ -93,6 +100,19 @@ const HeaderRequest: React.FC<HeaderRequestProps> = () => {
         title="Chọn cửa hàng"
         onClose={() => setOpenStore(false)}
         onConfirm={handleChangeStore}
+        isLoading={isLoading}
+        modalIcon={() => (
+          <View style={tw`bg-[#F0F9FF] p-2 rounded-[50px]`}>
+            <View style={tw`bg-[#E0F2FE] p-2 rounded-[50px]`}>
+              <Icon
+                type="Ionicons"
+                name="storefront-outline"
+                color="#005FAB"
+                size={28}
+              />
+            </View>
+          </View>
+        )}
         buttonAxis="vertical">
         <SelectDropdown
           data={getUserStores(currentUser?.userStores || [])} // Kiểm tra giá trị này
@@ -121,6 +141,11 @@ const HeaderRequest: React.FC<HeaderRequestProps> = () => {
           showsVerticalScrollIndicator={false}
           dropdownStyle={styles.dropdownMenuStyle}
         />
+        {/* <QuantityInput
+          disabled={10 <= valueRedo}
+          value={valueRedo}
+          onChange={value => handleChangeRedo(value)}
+        /> */}
       </CustomModal>
     </>
   );

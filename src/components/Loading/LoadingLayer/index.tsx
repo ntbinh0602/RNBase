@@ -35,7 +35,7 @@ const LoadingLayer: React.FC<LoadingLayerProps> = ({
               textAlign: 'center',
               fontSize: 16,
               fontFamily: 'Roboto-Medium',
-              color: '#B7070A',
+              color: 'blue',
               top: '75%',
               alignSelf: 'center',
             }}>

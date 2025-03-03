@@ -14,7 +14,7 @@ export interface RequestProduct {
   servedQuantity: number | 0;
   createdAt?: string;
   status: string;
-  type: string;
+  type?: string;
   
 }
 

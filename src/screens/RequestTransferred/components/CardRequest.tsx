@@ -7,9 +7,15 @@ import {Notifications} from '../../../types/notification';
 
 interface CardRequestProps {
   item: Notifications;
+  handleReject: () => void;
+  handleServe: () => void;
 }
 
-const CardRequest: React.FC<CardRequestProps> = ({item}) => {
+const CardRequest: React.FC<CardRequestProps> = ({
+  item,
+  handleReject,
+  handleServe,
+}) => {
   return (
     <View style={styles.item}>
       <View style={styles.flex1}>
@@ -45,14 +51,14 @@ const CardRequest: React.FC<CardRequestProps> = ({item}) => {
           buttonStyle={styles.rejectButton}
           type="danger"
           textStyle={{fontSize: fontSize.font12}}
-          onPress={() => console.log('123123')}>
+          onPress={handleReject}>
           Từ chối
         </CustomButton>
         <CustomButton
           buttonStyle={styles.acceptButton}
           type="primary"
           textStyle={{fontSize: fontSize.font12}}
-          onPress={() => console.log('123123')}>
+          onPress={handleServe}>
           <Text>Hoàn tất đơn</Text>
         </CustomButton>
       </View>

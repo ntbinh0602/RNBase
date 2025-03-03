@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import ReactNativeModal from 'react-native-modal';
 import {CustomButton} from '../CustomButton';
+import LoadingLayer from '../Loading/LoadingLayer';
+import Colors from '../../utils/colors';
 
 interface CustomModalProps {
   visible?: boolean;
@@ -19,6 +21,8 @@ interface CustomModalProps {
   closeVisible?: boolean;
   confirmVisible?: boolean;
   headerVisible?: boolean;
+  isLoading?: boolean;
+  bgColorConfirm?: string;
   buttonAxis?: 'vertical' | 'horizontal';
 }
 
@@ -31,6 +35,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   width = '50%',
   children,
   modalStyle,
+  isLoading,
   contentStyle,
   headerStyle,
   closeText = 'Huỷ',
@@ -39,6 +44,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   confirmVisible = true,
   headerVisible = true,
   buttonAxis = 'vertical',
+  bgColorConfirm = Colors.primary,
 }) => {
   const checkButtonAxis = (axis: string) => {
     switch (axis) {
@@ -50,7 +56,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
         'column';
     }
   };
-
   return (
     <ReactNativeModal
       isVisible={visible}
@@ -62,6 +67,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       backdropOpacity={0.5}>
       <View style={[styles.content, {width: width}, contentStyle]}>
         <View style={styles.icon}>{modalIcon?.() ?? null}</View>
+        {isLoading && <LoadingLayer />}
         {headerVisible && title && (
           <Text style={[styles.title, headerStyle]}>{title}</Text>
         )}
@@ -95,6 +101,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   ? styles.buttonW_full
                   : styles.buttonW_fix,
               ])}
+              backgroundColor={bgColorConfirm}
               type="primary"
               onPress={onConfirm}>
               {confirmText}
@@ -120,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     alignItems: 'center',
+    overflow: 'hidden',
   },
   title: {
     fontSize: 20,

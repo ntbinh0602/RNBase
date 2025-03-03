@@ -1,4 +1,11 @@
-import {View, StyleSheet, FlatList, RefreshControl, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  Text,
+  InteractionManager,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {wp} from '../../styles/commonStyles';
 import CardRequest from './components/CardRequest';
@@ -14,6 +21,8 @@ import {Notifications} from '../../types/notification';
 import {getSocket} from '../../utils/socket';
 import useAuthStore from '../../store/authStore';
 import LoadingLayer from '../../components/Loading/LoadingLayer';
+import ModalReject from './components/ModalReject';
+import ModalServe from './components/ModalServe';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -21,19 +30,18 @@ type Props = NativeStackScreenProps<
 >;
 
 const RequestTransferred: React.FC<Props> = ({navigation}) => {
-  const {currentUser, getCurrentUser, chooseStore} = useAuthStore();
+  const {getCurrentUser} = useAuthStore();
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notifications[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
-
+  const [openReject, setOpenReject] = useState<boolean>(false);
+  const [openServe, setOpenServe] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [limit] = useState<number>(10);
-  const onRefresh = useCallback(() => {}, []);
+  const [limit] = useState<number>(12);
 
   const fetchNotifications = async (page: number, limit: number) => {
-    setLoading(true);
     try {
       const response: AxiosResponse = await http.get('/notification', {
         params: {page, limit},
@@ -47,6 +55,7 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
         );
         return [...prevNotifications, ...filteredNewNotifications];
       });
+      setRefreshing(false);
       setUnreadCount(response.data.unreadCount);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -79,7 +88,6 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
     };
 
     initialize();
-
     return () => {
       getSocket().then(socket => socket.off('notification.request'));
     };
@@ -97,22 +105,34 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
     getCurrentUser();
   }, []);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setNotifications([]);
+    setPage(1);
+  }, []);
+
   return (
     <View style={[styles.container]}>
-      <LoadingLayer />
-      {/* <View style={styles.contentWrapper}>
+      {loading && <LoadingLayer />}
+      <View style={styles.contentWrapper}>
         <HeaderRequest />
         <View style={{flex: 1, marginTop: 20}}>
           <FlatList
             data={notifications}
             keyExtractor={item => item.id.toString()}
             numColumns={3}
-            renderItem={({item}) => <CardRequest item={item} />}
+            renderItem={({item}) => (
+              <CardRequest
+                handleServe={() => setOpenServe(true)}
+                handleReject={() => setOpenReject(true)}
+                item={item}
+              />
+            )}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             scrollEventThrottle={250}
-            onEndReached={info => {
+            onEndReached={() => {
               addDocuments();
             }}
             onEndReachedThreshold={0.01}
@@ -131,13 +151,18 @@ const RequestTransferred: React.FC<Props> = ({navigation}) => {
         </View>
       </View>
       <View style={styles.sidebar}>
-        <LeftRequest
-          onLogoutPress={() => {
-            navigation.replace(NavigationStackScreens.AuthNavigation);
-            clearLS();
-          }}
-        />
-      </View> */}
+        <LeftRequest />
+      </View>
+      <ModalReject
+        onClose={() => setOpenReject(false)}
+        onConfirm={() => console.log('123')}
+        openStore={openReject}
+      />
+      <ModalServe
+        onClose={() => setOpenServe(false)}
+        onConfirm={() => console.log('123')}
+        openStore={openServe}
+      />
     </View>
   );
 };
@@ -153,7 +178,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   sidebar: {
-    width: wp(20),
+    width: wp(22),
     backgroundColor: 'white',
   },
   row: {

@@ -51,7 +51,6 @@ const useAuthStore = create<AuthStore>((set) => ({
     try {
       const response = await http.get(URL_CURRENT_USER);
       set({ currentUser: response.data, isLoading: false });
-      console.log('🇻🇳 👉 responseresponseresponse',response)
       return response.data;
     } catch (error) {
       showError({ error, title: 'Lỗi xác thực', message: 'Không có quyền truy cập!' });

@@ -32,7 +32,7 @@ function App(): JSX.Element {
             alignItems: 'center',
           },
           IS_TABLET && {
-            width: '40%',
+            width: 'auto',
             alignSelf: 'center',
           },
         ]}

@@ -1,5 +1,15 @@
-import {View, Text, ImageBackground, StyleSheet} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  Keyboard,
+  Animated,
+  Easing,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 import {LoginBackground} from '../../assets';
 import {useForm, FormProvider, SubmitHandler} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
@@ -12,7 +22,6 @@ import {roleTypes} from '../../common/constant';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../types/rootParam.type';
 import {AuthStackScreens, NavigationStackScreens} from '../../common/enum';
-import {showError} from '../../utils/error';
 import {showMessage} from 'react-native-flash-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, AuthStackScreens.Login>;
@@ -20,7 +29,7 @@ type Props = NativeStackScreenProps<RootStackParamList, AuthStackScreens.Login>;
 const Login: React.FC<Props> = ({navigation}) => {
   const {isLoading, login, chooseStore} = useAuthStore();
   const methods = useForm<LoginPayLoad>();
-
+  const height = Dimensions.get('window').height;
   const getUserStores = (userStores: Array<UserStore>) => {
     return userStores.map(currentUserStore => ({
       value: currentUserStore.storeId,
@@ -50,50 +59,79 @@ const Login: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (event: any) => {
+        Animated.timing(translateY, {
+          toValue: -event.endCoordinates.height / 2,
+          duration: 200,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }).start();
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        Animated.timing(translateY, {
+          toValue: 0, // Trả về vị trí cũ
+          duration: 200,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }).start();
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <ImageBackground style={styles.container} source={LoginBackground}>
-      <View style={styles.formWrapper}>
-        <Text style={styles.textHeader}>Đăng nhập</Text>
-        <FormProvider {...methods}>
-          <CustomTextInput
-            name="username"
-            label="Tài khoản"
-            placeholder="name@email.com"
-            keyboardType="email-address"
-            rules={{required: 'Tài khoản là bắt buộc!'}}
-            inputContainerStyle={styles.inputContainer}
-            inputStyle={styles.inputStyle}
-          />
-          <CustomTextInput
-            name="password"
-            label="Mật khẩu"
-            inputType="password"
-            placeholder="Password"
-            rules={{required: 'Mật khẩu là bắt buộc!'}}
-            inputContainerStyle={styles.inputContainer}
-            inputStyle={styles.inputStyle}
-          />
-        </FormProvider>
-        <View style={styles.actionWrapper}>
-          {/* <TouchableOpacity style={styles.forgotButton}>
-            <Text style={styles.forgotText}>Forgot password?</Text>
-          </TouchableOpacity>
-          <CustomCheckbox
-            text="Ghi nhớ mật khẩu"
-            style={styles.checkbox}
-            disableText={false}
-            onPress={(isChecked: boolean) => {}}
-          /> */}
-          <CustomButton
-            loading={isLoading}
-            buttonStyle={styles.loginButton}
-            type="primary"
-            onPress={methods.handleSubmit(onSubmit)}>
-            Đăng nhập
-          </CustomButton>
-        </View>
-      </View>
-    </ImageBackground>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <ImageBackground
+        style={[styles.container, {height: height}]}
+        source={LoginBackground}>
+        <Animated.View
+          style={[styles.formWrapper, {transform: [{translateY}]}]}>
+          <Text style={styles.textHeader}>Đăng nhập</Text>
+          <FormProvider {...methods}>
+            <CustomTextInput
+              name="username"
+              label="Tài khoản"
+              placeholder="name@email.com"
+              keyboardType="email-address"
+              rules={{required: 'Tài khoản là bắt buộc!'}}
+              inputContainerStyle={styles.inputContainer}
+              inputStyle={styles.inputStyle}
+            />
+            <CustomTextInput
+              name="password"
+              label="Mật khẩu"
+              inputType="password"
+              placeholder="Password"
+              rules={{required: 'Mật khẩu là bắt buộc!'}}
+              inputContainerStyle={styles.inputContainer}
+              inputStyle={styles.inputStyle}
+            />
+          </FormProvider>
+          <View style={styles.actionWrapper}>
+            <CustomButton
+              loading={isLoading}
+              buttonStyle={styles.loginButton}
+              type="primary"
+              onPress={methods.handleSubmit(onSubmit)}>
+              Đăng nhập
+            </CustomButton>
+          </View>
+        </Animated.View>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -101,7 +139,6 @@ export default Login;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,6 +1,7 @@
 import axios, { AxiosError, HttpStatusCode, type AxiosInstance } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  BASE_URL,
   clearLS,
   setAccessTokenToLS,
   setCustomerInfo,
@@ -23,7 +24,7 @@ export class Http {
   constructor() {
     this.refreshTokenRequest = null;
     this.instance = axios.create({
-      baseURL: 'https://ctynamviet.1erp.vn/be-order/api/v1/',
+      baseURL: BASE_URL,
       timeout: 120000,
       withCredentials: true,
       headers: {

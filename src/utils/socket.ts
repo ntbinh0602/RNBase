@@ -13,7 +13,6 @@ export const initializeSocket = async (): Promise<Socket> => {
       throw new Error('Không có Access Token');
     }
 
-    console.log('🇻🇳 👉 Access Token:', accessToken);
 
     socket = io('https://ctynamviet.1erp.vn', {
       extraHeaders: {
@@ -47,7 +46,6 @@ export const getSocket = async (): Promise<Socket> => {
   if (socket) {
     return socket;
   }
-  console.log('🇻🇳 👉 socket',socket)
   console.warn('⚠️ Socket not initialized. Waiting for initialization...');
   return await initializeSocket();
 };
@@ -56,6 +54,5 @@ export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
     socket = null;
-    console.log('Socket disconnected');
   }
 };
