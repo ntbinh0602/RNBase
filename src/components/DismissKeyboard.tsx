@@ -1,13 +1,4 @@
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-  Text,
-} from 'react-native';
+import {Keyboard, TouchableWithoutFeedback} from 'react-native';
 import React, {ReactNode} from 'react';
 
 interface DismissKeyboardProps {
