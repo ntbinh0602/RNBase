@@ -13,7 +13,6 @@ const AuthNavigationRoutes = () => {
       initialRouteName={AuthStackScreens.Login}
       screenOptions={{
         gestureEnabled: false,
-        orientation: 'landscape',
       }}>
       <Stack.Screen
         name={AuthStackScreens.Login}

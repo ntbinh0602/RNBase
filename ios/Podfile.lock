@@ -307,6 +307,9 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-webview (13.13.2):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - React-perflogger (0.71.19)
   - React-RCTActionSheet (0.71.19):
     - React-Core/RCTActionSheetHeaders (= 0.71.19)
@@ -481,6 +484,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -565,6 +569,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -644,6 +650,7 @@ SPEC CHECKSUMS:
   React-jsinspector: e591d9ecb571456fc929ee10409d8847a442d6a7
   React-logger: 70ddbe0e07179c8adb94c4bffc36c6abc952d3d4
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-webview: f44e822d613d729859a140b79ca88641094f3550
   React-perflogger: 0ba097528e325435aca94b32b5330f58f6acb6fb
   React-RCTActionSheet: 805b3a83f3dd7ae5a1213ea9df0ed748eeb74b85
   React-RCTAnimation: 2a0233681dee47e468302b8233652b35b68329cb
@@ -668,6 +675,6 @@ SPEC CHECKSUMS:
   Yoga: d4f5b037672e6b68ba484c7cf7fe6790122df792
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 884b89469e6c49066b37e6b26bd524c5f1f89d5e
+PODFILE CHECKSUM: b804ce30bd6cfda5bc80209aa774d02e6bd85112
 
 COCOAPODS: 1.15.2

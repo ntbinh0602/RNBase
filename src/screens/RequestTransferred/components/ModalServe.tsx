@@ -88,22 +88,10 @@ const ModalServe: React.FC<ModalServeProps> = ({
     );
   };
 
-  // Đồng bộ `selectedItems` khi `updatedList` thay đổi
-  //   useEffect(() => {
-  //     setSelectedItems(prevSelected =>
-  //       prevSelected.map(selectedItem => {
-  //         const updatedItem = updatedList.find(
-  //           item => item.id === selectedItem.id,
-  //         );
-  //         return updatedItem ? updatedItem : selectedItem;
-  //       }),
-  //     );
-  //   }, [updatedList]);
-
   useEffect(() => {
     setUpdatedList(data);
   }, []);
-  console.log('🇻🇳 👉 selectedItems', selectedItems);
+
   return (
     <CustomModal
       visible={openStore}

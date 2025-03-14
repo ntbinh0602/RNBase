@@ -12,7 +12,6 @@ const MainNavigationRoutes = () => {
       initialRouteName={MainStackScreens.RequestTransferred}
       screenOptions={{
         gestureEnabled: false,
-        orientation: 'landscape',
       }}>
       <Stack.Screen
         name={MainStackScreens.RequestTransferred}

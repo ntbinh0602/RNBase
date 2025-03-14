@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
   },
   body: {
     marginBottom: 20,
+    width: '100%',
   },
   buttonWrapper: {flexDirection: 'row', gap: 10},
   button: {

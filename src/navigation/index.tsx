@@ -16,7 +16,6 @@ const MainNavigator = () => {
         initialRouteName={NavigationStackScreens.SplashScreen}
         screenOptions={{
           gestureEnabled: false,
-          orientation: 'landscape',
         }}>
         <Stack.Screen
           name={NavigationStackScreens.SplashScreen}
