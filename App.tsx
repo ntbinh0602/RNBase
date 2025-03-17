@@ -11,12 +11,13 @@ import MainNavigator from './src/navigation';
 import FlashMessage from 'react-native-flash-message';
 import Colors from './src/utils/colors';
 import DeviceInfo from 'react-native-device-info';
+import RequestTransferred from './src/screens/RequestTransferred';
 
 function App(): JSX.Element {
   const IS_TABLET: boolean = DeviceInfo.isTablet();
   return (
     <>
-      <MainNavigator />
+      <RequestTransferred />
       <FlashMessage
         position="top"
         style={[
